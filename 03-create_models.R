@@ -21,13 +21,17 @@ extractFeatures <- function(data) {
                 "Parch",
                 "SibSp",
                 "Fare",
-                "Embarked")
+                "Embarked",
+                "Child")
   fea <- data[,features, with = FALSE]
   fea$Age[is.na(fea$Age)] <- -1
   fea$Fare[is.na(fea$Fare)] <- median(fea$Fare, na.rm=TRUE)
+  fea$Child[is.na(fea$Child)] <- 0
+  
   fea$Embarked[fea$Embarked==""] = "S"
   fea$Sex      <- as.factor(fea$Sex)
   fea$Embarked <- as.factor(fea$Embarked)
+  fea$Child <- as.factor(fea$Child)
   return(fea)
 }
 
@@ -35,6 +39,7 @@ rf <- randomForest(extractFeatures(DT_train), as.factor(DT_train$Survived), ntre
 
 submission <- data.table(PassengerId = DT_test$PassengerId)
 submission$Survived <- predict(rf, extractFeatures(DT_test))
+
 write.csv(submission, file = "1_random_forest_r_submission.csv", row.names=FALSE)
 
 imp <- importance(rf, type=1)
