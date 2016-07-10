@@ -12,6 +12,8 @@ library(randomForest)
 
 set.seed(1)
 
+#' Columns selection and data cleaning
+#' @param data data.table
 extractFeatures <- function(data) {
   features <- c("Pclass",
                 "Age",
